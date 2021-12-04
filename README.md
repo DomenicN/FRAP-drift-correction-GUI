@@ -34,5 +34,5 @@ To launch the GUI, first switch to the `FRAP_Analysis` environment:
 Then start the main GUI with
 
 ```
-    FRAP_Analysis main <img>.czi
+    frap main Samples/Example_Movie.czi
 ```
