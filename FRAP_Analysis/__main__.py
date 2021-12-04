@@ -9,7 +9,7 @@ from .ImageViewer import launch
 def cli():
     pass
 
-@click.command()
+@cli.command()
 @click.argument('path', type=str)
 def main(path):
     """

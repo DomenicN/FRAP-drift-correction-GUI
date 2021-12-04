@@ -101,13 +101,8 @@ def make_metadata_tree(path):
     """
     extension = os.path.splitext(path)[-1]
     if extension == '.czi':
-        reg = re.compile("<ImageDocument>.*</ImageDocument>", re.DOTALL)
-        with open(path, encoding="latin1") as imgFile:
-            data = imgFile.read()
-            matches = reg.findall(data)
-
-        metadata_tree = ETree.fromstring(matches[0])
-
+        with cz.CziFile(path) as czi:
+            metadata_tree = ETree.fromstring(czi.metadata())
     else:
         raise UnknownFiletypeError(extension)
 
