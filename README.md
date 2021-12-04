@@ -23,6 +23,7 @@ FRAP Analysis is a Python gui which enables analysis of FRAP data. Currently, FR
 
 ```
     python setup.py develop
+```
 ## Running the GUI:
 To launch the GUI, first switch to the `FRAP_Analysis` environment:
 
