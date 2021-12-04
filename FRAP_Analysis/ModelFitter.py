@@ -7,10 +7,10 @@ import numpy as np
 from matplotlib import pyplot as plt
 from scipy.optimize import curve_fit
 from scipy.special import i0, i1, iv, kv
-from finiteNucleusUtilities import preprocessFM, fitFunFM
+from .finiteNucleusUtilities import preprocessFM, fitFunFM
 
 # INVLAP
-from invlap import invlap
+from .invlap import invlap
 
 # TODO: Make this less arbitrary and bad
 K_OFF_1_MAX = 0.1
@@ -386,18 +386,3 @@ class FiniteOneReactionAverage(FRAPModel):
             self.func(x, k_on_1, k_on_2, k_off_1, k_off_2, D_f, self.w)
         return (self.x_data[self.start_frame:],
                 fit_fun(self.x_data[self.start_frame:], *self.popt))
-
-# test = FRAPImage('HEPG2_640nm_0p2_750V_FRAP_640nm_at100_iter3_ss7_cyc5_1s_606cycs_movie1.czi')
-# test_model = BasicExponential(test)
-# test_model.fit()
-# test_model.make_plt_plot()
-# test.attach_model(BasicExponential)
-
-# def testfunc(x, t_d):
-#     return np.exp(-2 * t_d / x) * (i0(2 * t_d / x) + i1(2 * t_d / x))
-#
-# x = np.linspace(0, 600)
-#
-# for t in [0.1, 0.5, 1, 10]:
-#     plt.plot(x, testfunc(x, t))
-# plt.show()

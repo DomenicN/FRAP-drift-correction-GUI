@@ -8,10 +8,11 @@ Modified by Domenic Narducci for FRAP
 import sys
 
 # Image Reader
-from ImageReader import FRAPImage
+from .ImageReader import FRAPImage
 
 # Model fitter
-import ModelFitter as mf
+from .ModelFitter import BasicExponential, PureDiffusion, OneReaction, \
+    TwoReaction, FullOneReactionAverage, FullTwoReactionAverage
 
 # Core GUI utilities
 from PySide2.QtCore import Qt, QLocale
@@ -22,7 +23,7 @@ from PySide2.QtWidgets import QWidget, QGridLayout, \
     QCheckBox
 from PySide2.QtGui import QKeySequence, QFont
 from PySide2.QtGui import Qt as QtGui_Qt
-from guiUtils import IntSlider, SingleImageWindow, LabeledQComboBox, \
+from .guiUtils import IntSlider, SingleImageWindow, LabeledQComboBox, \
     coerce_type, set_dark_app
 
 # pyqtgraph utilities for showing images
@@ -554,12 +555,12 @@ class ImageViewer(QWidget):
         """
         Attaches model, fits it and displays it
         """
-        SELECTIONS = {"Basic Exponential":mf.BasicExponential,
-                      "Pure Circular Diffusion":mf.PureDiffusion,
-                      "Single Reaction Dominant":mf.OneReaction,
-                      "Double Reaction Dominant":mf.TwoReaction,
-                      "Full Single Reaction (Avg)":mf.FullOneReactionAverage,
-                      "Full Double Reaction (Avg)":mf.FullTwoReactionAverage}
+        SELECTIONS = {"Basic Exponential":BasicExponential,
+                      "Pure Circular Diffusion":PureDiffusion,
+                      "Single Reaction Dominant":OneReaction,
+                      "Double Reaction Dominant":TwoReaction,
+                      "Full Single Reaction (Avg)":FullOneReactionAverage,
+                      "Full Double Reaction (Avg)":FullTwoReactionAverage}
         LABELS = {"Basic Exponential":"A = {}\nTau = {}",
                   "Pure Circular Diffusion":"t_d = {}\nD = {}",
                   "Single Reaction Dominant":"k_off = {}\nk_on_* = {}",

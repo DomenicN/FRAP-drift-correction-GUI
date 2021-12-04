@@ -3,9 +3,11 @@ ImageReader.py - Script that reads in images and relevant metadata
 """
 import numpy as np
 import pandas as pd
-import ProcessingUtilities as pu
-import ReaderUtilities as ru
-from frapFile import FRAPFile
+from .ProcessingUtilities import estimateRadius, computeBleachingProfile, \
+    fitBleachingProfile, normalizeFRAPCurve, processImage
+from .ReaderUtilities import make_metadata_tree, make_frame_metadata, \
+    make_roi, make_dimension_metadata, read_image
+from .frapFile import FRAPFile
 
 class FRAPImage:
     """
@@ -24,18 +26,18 @@ class FRAPImage:
         print('Acquiring metadata...')
 
         # Metadata
-        self.metadata_tree = ru.make_metadata_tree(self.path) # contains the original metadata for the image
+        self.metadata_tree = make_metadata_tree(self.path) # contains the original metadata for the image
 
-        self.frame_data = ru.make_frame_metadata(self.path)  # frame data array [index, DeltaT]
-        self.shape, self.physical_size = ru.make_dimension_metadata(self.path)
+        self.frame_data = make_frame_metadata(self.path)  # frame data array [index, DeltaT]
+        self.shape, self.physical_size = make_dimension_metadata(self.path)
         self.xdim, self.ydim, self.tdim = self.shape
-        self.roi_coords, self.roi_radii = ru.make_roi(self.path)
+        self.roi_coords, self.roi_radii = make_roi(self.path)
         self.roi_viewer_coords = [(self.roi_coords[0] - self.roi_radii[0],
                                    self.roi_coords[1] - self.roi_radii[1]) for i in range(self.tdim)]
         self.keyframes = {0:self.roi_viewer_coords[0], self.tdim - 1:self.roi_viewer_coords[-1]}
 
         print('Acquiring image data...')
-        self.image_data = ru.read_image(self.path)
+        self.image_data = read_image(self.path)
         self.raw_image_data = self.image_data.copy()
 
         self.set_mean_intensity_data(update=False)
@@ -52,7 +54,7 @@ class FRAPImage:
         self.corrected_nonbleach_intensities = None
 
         # Estimate nuclear radius
-        self.nuclear_radius = pu.estimateRadius(self)
+        self.nuclear_radius = estimateRadius(self)
 
         # Set initial values for gap ratio and bleaching depth
         self.gap_ratio = -1
@@ -67,8 +69,8 @@ class FRAPImage:
         self.start_frame = np.argmin(self.get_mean_intensity_data())
 
         # Compute bleaching profile
-        self.bleach_distances, self.bleach_profile = pu.computeBleachingProfile(self)
-        self.bleach_profile_popt, self.bleach_profile_pcov = pu.fitBleachingProfile(self)
+        self.bleach_distances, self.bleach_profile = computeBleachingProfile(self)
+        self.bleach_profile_popt, self.bleach_profile_pcov = fitBleachingProfile(self)
 
         # Attach model
         self.Model = None
@@ -276,7 +278,7 @@ class FRAPImage:
         # Do normalization
         self.set_mean_intensity_data()
 
-        self.mean_intensity_data = pu.normalizeFRAPCurve(self.mean_intensity_data, self.start_frame, method, prebleach_ss)
+        self.mean_intensity_data = normalizeFRAPCurve(self.mean_intensity_data, self.start_frame, method, prebleach_ss)
         self.file.update()
 
     def correct_photobleaching(self, subtract_bg):
@@ -286,7 +288,7 @@ class FRAPImage:
         :return:
         """
         print('Processing image...')
-        self.photobleaching_params = pu.processImage(self, subtract_bg)
+        self.photobleaching_params = processImage(self, subtract_bg)
         self.file.update()
 
     def get_time_intensity_pt(self, idx):
@@ -329,8 +331,8 @@ class FRAPImage:
         """
         self.start_frame = new_start_frame
         # Recompute bleaching profile
-        self.bleach_distances, self.bleach_profile = pu.computeBleachingProfile(self)
-        self.bleach_profile_popt, self.bleach_profile_pcov = pu.fitBleachingProfile(self)
+        self.bleach_distances, self.bleach_profile = computeBleachingProfile(self)
+        self.bleach_profile_popt, self.bleach_profile_pcov = fitBleachingProfile(self)
 
     def reset_start_frame(self):
         """

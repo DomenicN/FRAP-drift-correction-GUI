@@ -8,5 +8,10 @@ setup(
     license='MIT',
     author='Domenic Narducci',
     author_email='domenicn@mit.edu',
-    description='A simple package for FRAP analysis.'
+    description='A simple package for FRAP analysis.',
+	entry_points = {
+		'console_scripts': [
+			'frap=FRAP_Analysis.__main__:cli'
+		],
+	}
 )
