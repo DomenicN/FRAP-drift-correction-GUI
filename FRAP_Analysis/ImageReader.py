@@ -4,7 +4,7 @@ ImageReader.py - Script that reads in images and relevant metadata
 import numpy as np
 import pandas as pd
 from .ProcessingUtilities import estimateRadius, computeBleachingProfile, \
-    fitBleachingProfile, normalizeFRAPCurve, processImage
+    fitBleachingProfile, normalizeFRAPCurve, processImage, computeBestStartFrame
 from .ReaderUtilities import make_metadata_tree, make_frame_metadata, \
     make_roi, make_dimension_metadata, read_image
 from .frapFile import FRAPFile
@@ -61,12 +61,9 @@ class FRAPImage:
         self.bleaching_depth = -1
 
         # Fix start time
-        start_frame = np.argmin(self.get_mean_intensity_data())
+        self.start_frame = computeBestStartFrame(self)
         x_data = self.get_frame_metadata()[:, 1]
-        x_data -= x_data[start_frame - 1]
-        # TODO: Maybe start_frame should be the frame which maximizes difference between itself
-        #  and prior frames rather than just the min
-        self.start_frame = np.argmin(self.get_mean_intensity_data())
+        x_data -= x_data[self.start_frame - 1]
 
         # Compute bleaching profile
         self.bleach_distances, self.bleach_profile = computeBleachingProfile(self)
@@ -512,11 +509,3 @@ class UnknownFiletypeError(Exception):
     def __init__(self, filetype):
         self.message = f"Extension {filetype} is not recognized."
         super().__init__(self.message)
-
-
-# test = FRAPImage("HEPG2_640nm_0p2_700V_FRAP_640nm_at100_iter3_ss7_cyc5_1s_606cycs_movie6-01.czi")
-# test.save_data('')
-# print(test.get_time_intensity_pt(100))
-# test.set_keyframe(50, (10.0, 10.0))
-# print(test.get_viewer_coords())
-# print(test.get_time_intensity_pt(100))

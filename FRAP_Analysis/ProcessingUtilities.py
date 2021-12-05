@@ -354,3 +354,13 @@ def computeQCMetrics(frap_img, prebleach_ss=True):
     return computeGapRatio(frap_img, start_frame), \
            computeBleachingDepth(frap_img.get_mean_intensity_data(), start_frame, prebleach_ss)
 
+def computeBestStartFrame(frap_image):
+    """
+    Computes the best start frame guess by finding the frame which maximizes the difference
+    between itself and the prior frame
+    :param frap_image: an object of class FRAPImage
+    :return: best start frame guess
+    """
+    intensities = frap_image.get_mean_intensity_data()
+    delta_intensity = [intensities[i+1] - intensities[i] for i in range(len(intensities)-1)]
+    return np.argmax(delta_intensity)
