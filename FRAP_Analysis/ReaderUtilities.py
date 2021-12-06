@@ -31,7 +31,7 @@ def read_image(path, as_dask=False):
     extension = os.path.splitext(path)[-1]
     if extension == '.czi':
         if not as_dask:
-            image = imageio.AICSImage(path)
+            image = imageio.AICSImage(path, reader=CziReader)
             image_data = image.get_image_data("XYT", H=0, S=0, C=0, Z=0)
             return image_data
     else:

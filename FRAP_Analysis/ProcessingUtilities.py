@@ -9,7 +9,7 @@ import scipy.stats as stats
 import cv2
 import warnings
 from scipy.optimize import curve_fit
-from skimage.filters import threshold_multiotsu
+from skimage.filters import threshold_otsu
 from tqdm import tqdm
 
 
@@ -118,7 +118,9 @@ def segmentCell(frame, roi_center, roi_radius, inverted=False, plot=False, retur
     blur = cv2.circle(blur, roi_center, int(roi_radius + 4), (0,0,0), -1)
 
     # compute threshold
-    threshold = min(threshold_multiotsu(blur))
+    # TODO: Fix nuclear segmentation
+    # threshold = min(threshold_multiotsu(blur))
+    threshold = threshold_otsu(blur)
 
     binary_mask = blur > threshold
     kernel = np.ones((10, 10), np.uint8)
