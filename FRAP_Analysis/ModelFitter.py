@@ -12,7 +12,6 @@ from .finiteNucleusUtilities import preprocessFM, fitFunFM
 # INVLAP
 from .invlap import invlap
 
-# TODO: Make this less arbitrary and bad
 K_OFF_1_MAX = 0.1
 DIFF_COEFF_MAX = 50
 

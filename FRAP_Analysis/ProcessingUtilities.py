@@ -10,6 +10,7 @@ import cv2
 import warnings
 from scipy.optimize import curve_fit
 from skimage.filters import threshold_multiotsu
+from tqdm import tqdm
 
 
 def subtractBackground(img, method='segmentation', coords=None,
@@ -81,7 +82,7 @@ def correctPhotobleaching(mov):
     coords = np.around(coords, decimals=0).astype(int)
     start_frame = mov.get_start_frame()
     mean_intensities = [np.mean(segmentCell(frame[:, :, i], tuple(reversed(coords[i])), radius)) \
-                        for i in range(mov.get_tdim())]
+                        for i in tqdm(range(mov.get_tdim()), desc="Getting nuclear intensities")]
     intensity_ratios = [intensity / mean_intensities[start_frame] for intensity in mean_intensities]
 
     # fit exponential decay
@@ -95,7 +96,7 @@ def correctPhotobleaching(mov):
     # correct image
     print('Correcting photobleaching...')
     correction_factors = func(x_data, *popt)
-    for i in range(mov.get_tdim()):
+    for i in tqdm(range(mov.get_tdim()), desc="Correcting photobleaching"):
         frame[:, :, i] /= correction_factors[i]
     corrected_mean_intensities = [mean_intensities[i] / correction_factors[i] for i in range(len(mean_intensities))]
     return frame, popt, pcov, mean_intensities, corrected_mean_intensities

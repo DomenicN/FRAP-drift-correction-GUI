@@ -503,7 +503,6 @@ class ImageViewer(QWidget):
         """
         Set's the start frame for bleaching
         """
-        # TODO: Check this
         bleach_frame = self.frame_slider.value()
         self.ImageReader.set_start_frame(bleach_frame)
         self.startFrameLabel.setText("Bleach Frame: {}".format(self.ImageReader.get_start_frame()))

@@ -23,7 +23,7 @@ class FRAPImage:
         # Path and name
         self.path = path
         self.name = path.split('/')[-1]
-        print('Acquiring metadata...')
+        print('Reading metadata...')
 
         # Metadata
         self.metadata_tree = make_metadata_tree(self.path) # contains the original metadata for the image
@@ -36,7 +36,7 @@ class FRAPImage:
                                    self.roi_coords[1] - self.roi_radii[1]) for i in range(self.tdim)]
         self.keyframes = {0:self.roi_viewer_coords[0], self.tdim - 1:self.roi_viewer_coords[-1]}
 
-        print('Acquiring image data...')
+        print('Reading image data...')
         self.image_data = read_image(self.path)
         self.raw_image_data = self.image_data.copy()
 
@@ -81,7 +81,7 @@ class FRAPImage:
         Resets image data
         :return:
         """
-        print('Acquiring image data...')
+        print('\nReading image data...')
         self.image_data = self.raw_image_data
 
         self.set_mean_intensity_data()
@@ -275,7 +275,8 @@ class FRAPImage:
         # Do normalization
         self.set_mean_intensity_data()
 
-        self.mean_intensity_data = normalizeFRAPCurve(self.mean_intensity_data, self.start_frame, method, prebleach_ss)
+        self.mean_intensity_data = normalizeFRAPCurve(self.mean_intensity_data, self.start_frame,
+                                                      method, prebleach_ss)
         self.file.update()
 
     def correct_photobleaching(self, subtract_bg):
@@ -284,7 +285,7 @@ class FRAPImage:
         :param subtract_bg: whether to perform background subtraction as well
         :return:
         """
-        print('Processing image...')
+        print('\nProcessing image...')
         self.photobleaching_params = processImage(self, subtract_bg)
         self.file.update()
 
