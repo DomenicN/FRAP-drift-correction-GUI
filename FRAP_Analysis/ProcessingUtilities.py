@@ -365,5 +365,5 @@ def computeBestStartFrame(frap_image):
     :return: best start frame guess
     """
     intensities = frap_image.get_mean_intensity_data()
-    delta_intensity = [intensities[i+1] - intensities[i] for i in range(len(intensities)-1)]
-    return np.argmax(delta_intensity)
+    delta_intensity = [abs(intensities[i+1] - intensities[i]) for i in range(len(intensities)-1)]
+    return np.argmax(delta_intensity) + 1
