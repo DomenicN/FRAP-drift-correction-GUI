@@ -4,7 +4,7 @@ FRAP Analysis is a Python gui which enables analysis of FRAP data. Currently, FR
 ## Installation:
 1. Clone the repository:
 ```
-    git clone https://github.com/DomenicN/FRAP_Analysis.git
+    git clone https://github.com/DomenicN/FRAP-drift-correction-GUI.git
 ```
 
 2. Create a `conda` environment for `FRAP_Analysis`. (If you don't already have it, you'll need `conda`: https://docs.conda.io/en/latest/miniconda.html.) Navigate to the top-level `FRAP_Analysis` directory and run 
