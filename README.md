@@ -1,3 +1,5 @@
+[![DOI](https://zenodo.org/badge/434790103.svg)](https://zenodo.org/doi/10.5281/zenodo.11089140)
+
 # FRAP Analysis
 FRAP Analysis is a Python gui which enables analysis of FRAP data. Currently, FRAP Analysis is optimized for circle FRAP. It implements background subtraction, photobleaching correction, and drift correction. Additionally, it implements circle FRAP models from Axelrod et al. 1976, Soumpasis et al. 1983, Sprague et al. 2004, and Mueller et al. 2008. 
 
